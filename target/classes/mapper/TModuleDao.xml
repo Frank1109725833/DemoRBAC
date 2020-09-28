@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shsxt.dao.TModuleDao">
+
+    <resultMap type="com.shsxt.po.TModule" id="TModuleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="moduleName" column="module_name" jdbcType="VARCHAR"/>
+        <result property="moduleStyle" column="module_style" jdbcType="VARCHAR"/>
+        <result property="url" column="url" jdbcType="VARCHAR"/>
+        <result property="parentId" column="parent_id" jdbcType="INTEGER"/>
+        <result property="parentOptValue" column="parent_opt_value" jdbcType="VARCHAR"/>
+        <result property="grade" column="grade" jdbcType="INTEGER"/>
+        <result property="optValue" column="opt_value" jdbcType="VARCHAR"/>
+        <result property="orders" column="orders" jdbcType="INTEGER"/>
+        <result property="isValid" column="is_valid" jdbcType="OTHER"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TModuleMap">
+        select
+          id, module_name, module_style, url, parent_id, parent_opt_value, grade, opt_value, orders, is_valid, create_date, update_date
+        from work.t_module
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TModuleMap">
+        select
+          id, module_name, module_style, url, parent_id, parent_opt_value, grade, opt_value, orders, is_valid, create_date, update_date
+        from work.t_module
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TModuleMap">
+        select
+        id, module_name, module_style, url, parent_id, parent_opt_value, grade, opt_value, orders, is_valid,
+        create_date, update_date
+        from work.t_module
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="moduleName != null and moduleName != ''">
+                and module_name = #{moduleName}
+            </if>
+            <if test="moduleStyle != null and moduleStyle != ''">
+                and module_style = #{moduleStyle}
+            </if>
+            <if test="url != null and url != ''">
+                and url = #{url}
+            </if>
+            <if test="parentId != null">
+                and parent_id = #{parentId}
+            </if>
+            <if test="parentOptValue != null and parentOptValue != ''">
+                and parent_opt_value = #{parentOptValue}
+            </if>
+            <if test="grade != null">
+                and grade = #{grade}
+            </if>
+            <if test="optValue != null and optValue != ''">
+                and opt_value = #{optValue}
+            </if>
+            <if test="orders != null">
+                and orders = #{orders}
+            </if>
+            <if test="isValid != null">
+                and is_valid = #{isValid}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into work.t_module(module_name, module_style, url, parent_id, parent_opt_value, grade, opt_value, orders, is_valid, create_date, update_date)
+        values (#{moduleName}, #{moduleStyle}, #{url}, #{parentId}, #{parentOptValue}, #{grade}, #{optValue}, #{orders}, #{isValid}, #{createDate}, #{updateDate})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update work.t_module
+        <set>
+            <if test="moduleName != null and moduleName != ''">
+                module_name = #{moduleName},
+            </if>
+            <if test="moduleStyle != null and moduleStyle != ''">
+                module_style = #{moduleStyle},
+            </if>
+            <if test="url != null and url != ''">
+                url = #{url},
+            </if>
+            <if test="parentId != null">
+                parent_id = #{parentId},
+            </if>
+            <if test="parentOptValue != null and parentOptValue != ''">
+                parent_opt_value = #{parentOptValue},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="optValue != null and optValue != ''">
+                opt_value = #{optValue},
+            </if>
+            <if test="orders != null">
+                orders = #{orders},
+            </if>
+            <if test="isValid != null">
+                is_valid = #{isValid},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from work.t_module where id = #{id}
+    </delete>
+    
+    <select id="queryAllModules" resultType="com.shsxt.po.TreeDto">
+        select id,IFNULL(parent_id,0) as pId,module_name AS name
+        from t_module where is_valid=1
+    </select>
+    
+    <select id="selectByMid" resultType="com.shsxt.po.TModule">
+        select opt_value from t_module where is_valid=1 AND id=#{id}
+    </select>
+</mapper>

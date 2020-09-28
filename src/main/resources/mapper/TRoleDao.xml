@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shsxt.dao.TRoleDao">
+
+    <resultMap type="com.shsxt.po.TRole" id="TRoleMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleRemark" column="role_remark" jdbcType="VARCHAR"/>
+        <result property="createDate" column="create_date" jdbcType="TIMESTAMP"/>
+        <result property="updateDate" column="update_date" jdbcType="TIMESTAMP"/>
+        <result property="isValid" column="is_valid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="TRoleMap">
+        select * from work.t_role where id = #{id} and is_valid=1
+    </select>
+
+    <select id="queryByName" resultMap="TRoleMap">
+        select * from work.t_role where role_name = #{roleName} and is_valid=1
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="TRoleMap">
+        select
+          *
+        from work.t_role
+        <where>
+            <if test="null !=roleName and roleName !=''">
+                and role_name like concat('%',#{roleName},'%')
+            </if>
+            and is_valid =1
+        </where>
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="TRoleMap">
+        select
+        id, role_name, role_remark, create_date, update_date, is_valid
+        from work.t_role
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and role_name = #{roleName}
+            </if>
+            <if test="roleRemark != null and roleRemark != ''">
+                and role_remark = #{roleRemark}
+            </if>
+            <if test="createDate != null">
+                and create_date = #{createDate}
+            </if>
+            <if test="updateDate != null">
+                and update_date = #{updateDate}
+            </if>
+            <if test="isValid != null">
+                and is_valid = #{isValid}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into work.t_role(role_name, role_remark, create_date, update_date, is_valid)
+        values (#{roleName}, #{roleRemark}, #{createDate}, #{updateDate}, #{isValid})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update work.t_role
+        <set>
+            <if test="roleName != null and roleName != ''">
+                role_name = #{roleName},
+            </if>
+            <if test="roleRemark != null and roleRemark != ''">
+                role_remark = #{roleRemark},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+            <if test="isValid != null">
+                is_valid = #{isValid},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById1">
+        delete from work.t_role where id = #{id}
+    </delete>
+
+    <select id="queryByRole" resultType="map">
+       select r1.id ,r1.role_name as roleName,
+       CASE
+	    WHEN IFNULL(temp.id,0) = 0 THEN ""
+	    ELSE "selected" END
+	    as selected
+       from t_role r1
+        LEFT JOIN
+        (select r.id,r.role_name from t_user_role ur JOIN t_role r ON ur.role_id=r.id
+        WHERE ur.user_id=#{id}) temp
+        ON r1.id=temp.id
+        where is_valid=1
+    </select>
+
+    <update id="deleteById">
+        update t_role
+        set is_valid=0
+        where id=#{id}
+    </update>
+
+</mapper>
