@@ -9,7 +9,7 @@ layui.use(['table','layer'],function(){
      */
     var  tableIns = table.render({
         elem: '#saleChanceList',
-        url : ctx+'/sale_chance/list?state=1&flag=1',
+        url : ctx+'/sale_chance/list2?state=1&flag=1',
         cellMinWidth : 95,
         page : true,
         height : "full-125",

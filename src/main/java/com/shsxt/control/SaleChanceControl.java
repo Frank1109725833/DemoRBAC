@@ -41,6 +41,13 @@ public class SaleChanceControl extends BaseController {
         return saleChanceService.test1(saleChanceQuery,flag,request);
     }
 
+    @RequirePermission(code = "102001")
+    @RequestMapping("list2")
+    @ResponseBody
+    public Map<String,Object> test2(SaleChanceQuery saleChanceQuery,Integer flag,HttpServletRequest request){
+        return saleChanceService.test1(saleChanceQuery,flag,request);
+    }
+
     @PostMapping("save")
     @ResponseBody
     public ResultInfo test1 (HttpServletRequest request, TSaleChance saleChance){

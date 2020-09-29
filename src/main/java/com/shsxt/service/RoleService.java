@@ -127,7 +127,6 @@ public class RoleService {
                 permission.setAclValue(moduleDao.selectByMid(mid).getOptValue());
                 list.add(permission);
             }
-            list.forEach(System.out::println);
             AssertUtil.isTrue(permissionDao.insertBatch(list)!=list.size(),"用户授权失败！");
         }
     }

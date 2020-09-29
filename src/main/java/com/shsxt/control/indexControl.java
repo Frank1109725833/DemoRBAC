@@ -36,7 +36,6 @@ public class indexControl extends BaseController {
         TUser tUser = userDao.queryById(id);
         request.setAttribute("user",tUser);
         List<String> permissions =permissionService.queryPermissions(id);
-        permissions.forEach(System.out::println);
         request.getSession().setAttribute("permissions",permissions);
         return "main";
     }
